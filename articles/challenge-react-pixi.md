@@ -26,3 +26,7 @@ ReactDOM.render(
 5. `npm install pixi.js @inlet/react-pixi`を実行してPIXI.jsとReactPixiを導入する。
 
 ## 基礎
+### ゲーム画面を作成する
+```typescript 
+import  * as PIXI from "@inlet/react-pixi"
+```
