@@ -5,6 +5,13 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [nextjs,nextauth,google]
 published: true
 ---
+# この記事に書いてあること
+僕がログイン機能を実現するために、NextAuthを利用しようとしたら、Next.js v13での動かし方がわからず、
+とても探し回るはめになったので、備忘録も兼ね、共有のために参考になる動画を埋め込んでいます！
+
+## 環境について
+NextAuthはV4.19、Next.jsはv13以降の環境を想定しています！
+
 # Googleログインを簡単に実装したい！！
 と思って、色々探していたら[NextAuth](https://next-auth.js.org/)という便利なものを見つけたので、早速使ってみることに...。
 https://next-auth.js.org/
