@@ -115,28 +115,10 @@ module.exports = nextConfig
 こうしなければ、クライアントサイドであろうとサーバサイドであろうと利用不可能です。
 ここから、クライアントサイドで利用するための工程です
 
-```tsx: src/Component/ProviderWrapper.tsx
-import { SessionProvider } from "next-auth/react";
-import { ReactNode } from "react";
-
-export default function ProviderWrapper({
-    children
-}:{
-    children : ReactNode
-}){
-    return (
-        <SessionProvider>
-            {children}
-        </SessionProvider>
-    )
-}
-```
-
-このコンポーネントは、```layout.tsx```で利用されます。
 ```tsx: src/app/layout.tsx
 "use client"
-import SessionWrapper from "@/Component/ProviderWrapper"
 import '../css/global.css';
+import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,
@@ -145,11 +127,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      {/*
+        <head /> will contain the components returned by the nearest parent
+        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
+      */}
       <head />
       <body>
-        <SessionWrapper>
+        <SessionProvider>
           {children}
-        </SessionWrapper>
+        </SessionProvider>
       </body>
     </html>
   )
@@ -157,7 +143,7 @@ export default function RootLayout({
 
 ```
 
-先ほど作成したコンポーネントを、このように設定することでNextAuthの認証が正常に動作するようになります
+このように設定することでNextAuthの認証が正常に動作するようになります
 
 #### daisyUIを導入して書くコード
 daisyUIを使うには、前提として、tailwindcssが入っていなければならないので、
