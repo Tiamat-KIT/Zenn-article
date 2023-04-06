@@ -17,7 +17,7 @@ export default function generateMetadata({params,serchParams}){
     return {title: product.title}
 }
 ```
-このような関数を定義します。
+上記のような関数を定義します。
 さて、私は動的メタデータに関する関数コンポーネントを以下のように定義しました。
 
 ## 動的にメタデータを作成するコンポーネントの実装
@@ -53,7 +53,6 @@ export default function SeoComponent(Info:SEOProps):Metadata {
                 height: 600,
             },
         }
-        
     }
     return metadata
 }
@@ -147,7 +146,7 @@ export default function (req:NextRequest){
 
 上記のコードでOGP画像を作成して、
 
-```page.tsx``などのページを形成するファイル内では
+```page.tsx```などのページを形成するファイル内では
 それらを以下のように活用します
 
 ```typescript 
