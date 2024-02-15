@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "negokaz.zenn-editor",
+        "zenn.zenn-preview",
+        "ms-azuretools.vscode-docker",
+        "henriiik.docker-linter",
+        "QuentinGruber.dockerfiletemplate"
+    ]
+  }
