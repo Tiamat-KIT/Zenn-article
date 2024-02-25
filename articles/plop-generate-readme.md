@@ -31,57 +31,111 @@ Plopを扱っているうちに、ふと「こうなってくるとREADME作成�
   - 作ったものの概要文
 
 ### 実際のコード
-```js:plopfile.js
-module.exports = (
-    /** @type {import("plop").NodePlopAPI} */
-    plop
-) => {
-    plop.setGenerator("README",{
+```js
+const lowerCaseAndRemoveDot = (str) => str.toLowerCase().replace(/\./g, '');
+
+module.exports = (plop) => {
+    plop.setGenerator("README", {
         description: "README.md File For project.",
         prompts: [
             {
+                type: "input",
+                name: "title",
+                message: "What's your project title?"
+            },
+            {
+                type: "confirm",
+                name: "isFullStack",
+                message: "Is this a Full Stack project?",
+                default: false
+            },
+            {
                 type: "list",
-                name: "LangName",
+                name: "FrontendLang",
+                message: "What's your project Frontend Development Language?",
+                choices: ["TypeScript", "JavaScript", "Python", "Java", "Ruby", "Go", "PHP", "Rust"],
+                when: (answers) => !answers.isFullStack
+            },
+            {
+                type: "checkbox",
+                name: "FrontendFrameworks",
+                message: "What's Frontend Framework do you use?",
+                choices: ["React", "Next.js", "Vue.js", "Nuxt.js", "Angular", "Svelte", "Express.js", "Solid.js", "Playwright", "storybook"],
+                when: (answers) => !answers.isFullStack
+            },
+            {
+                type: "list",
+                name: "BackendLang",
+                message: "What's your project Backend Development Language?",
+                choices: ["Node.js", "Python", "Java", "Ruby", "Go", "PHP", "Rust"],
+                when: (answers) => !answers.isFullStack
+            },
+            {
+                type: "checkbox",
+                name: "BackendFrameworks",
+                message: "What's Backend Framework do you use?",
+                choices: ["Express.js", "Django", "Spring", "Ruby on Rails", "Laravel", "ASP.NET", "Flask", "FastAPI", "NestJS"],
+                when: (answers) => !answers.isFullStack
+            },
+            {
+                type: "list",
+                name: "Lang",
                 message: "What's your project Development Language?",
-                choices: ["TypeScript","JavaScript","Python","Java","Ruby","Go","PHP","Rust"]
-            },{
+                choices: ["TypeScript", "JavaScript", "Python", "Java", "Ruby", "Go", "PHP", "Rust"],
+                when: (answers) => answers.isFullStack
+            },
+            {
                 type: "checkbox",
-                name: "Style",
-                message: "What's Style Library do you use?",
-                choices: ["Sass","Less","Stylus","PostCSS","CSS","SCSS","TailwindCSS","daisyui"]   
-            },{
-                type: "checkbox",
-                name: "MultipleChoice",
-                message: "package in this project. Input use package names.",
-                choices: ["React","Next.js","Vue.js","Nuxt.js","Angular","Svelte","Express.js","Solid.js","Playwright","storybook"]
-            },{
+                name: "Frameworks",
+                message: "What's Framework do you use?",
+                choices: ["React", "Next.js", "Vue.js", "Nuxt.js", "Angular", "Svelte", "Express.js", "Solid.js", "Playwright", "storybook"],
+                when: (answers) => answers.isFullStack
+            },
+            {
                 type: "input",
                 name: "description",
-                message: "It's a description of this project."
-        }],
-        actions: (
-            data
-        ) => {
-            // const InputImg = `<img src="https://img.shields.io/badge/-${item}-000000.svg?logo=React&style=popout">`;
-            // const selected = data.MultipleChoice.map(item => `## ${item}`).join("\n");
-            const DisplayInline = (imgs) => {
-                return `<div style="display: inline">\n${imgs}\n</div>`
+                message: "Description:"
             }
-            const CurrentDirectoryh1 = "# " + __dirname.split("\\").pop();
-            const RepositoryDescription = "### 概要\n" + data.description;
-            const DevLang = `## 開発言語\n<img src="https://img.shields.io/badge/-${data.LangName}-000000.svg?logo=${data.LangName.toLowerCase()}&style=popout">`;
-            const StyleLibrary = `## Style Library\n${DisplayInline(data.Style.map(item => `<img src="https://img.shields.io/badge/-${item}-000000.svg?logo=${item.toLowerCase()}&style=popout">`))}`;
-            const selected = "## ライブラリ・フレームワーク\n" + data.MultipleChoice.map(item => `<img src="https://img.shields.io/badge/-${item}-000000.svg?logo=${item.toLowerCase()}&style=popout">`).join("\n");
-            return [
-                {
-                    type: "add",
-                    path: "./Example-README.md",
-                    template: `${CurrentDirectoryh1}\n\n${RepositoryDescription}\n\n${DevLang}\n\n${StyleLibrary}\n\n${selected}`
+        ],
+        actions: (data) => {
+            const generateSkillIcon = (name) => {
+                if(name === "TypeScript" || name === "JavaScript"){
+                    return `<img src="https://api.iconify.design/skill-icons:${lowerCaseAndRemoveDot(name)}.svg" alt="${name}" width="32" height="32" />`;
                 }
-            ]
+                return `<img src="https://api.iconify.design/skill-icons:${lowerCaseAndRemoveDot(name)}-dark.svg" alt="${name}" width="32" height="32" />`;
+            };
+
+            const frontendLang = data.isFullStack ? data.Lang : data.FrontendLang;
+            const frontendFrameworks = data.isFullStack ? data.Frameworks : data.FrontendFrameworks;
+            const backendLang = data.isFullStack ? null : data.BackendLang;
+            const backendFrameworks = data.isFullStack ? null : data.BackendFrameworks;
+
+            const langIcon = generateSkillIcon(frontendLang);
+            const frameworkIcons = frontendFrameworks.map(generateSkillIcon).join('');
+
+            if (!data.isFullStack) {
+                const backendLangIcon = generateSkillIcon(backendLang);
+                const backendFrameworkIcons = backendFrameworks.map(generateSkillIcon).join('');
+                return [
+                    {
+                        type: "add",
+                        path: "./Ex-README.md",
+                        template: `# ${data.title}\n\n## Frontend\n\n### Language: \n${langIcon}\n\n### Frameworks: \n${frameworkIcons}\n\n## Backend\n\n### Language: \n${backendLangIcon}\n\n### Frameworks: \n${backendFrameworkIcons}\n\n## 説明\n${data.description}`
+                    }
+                ];
+            } else {
+                return [
+                    {
+                        type: "add",
+                        path: "./Ex-README.md",
+                        template: `# ${data.title}\n\n## Full Stack\n\n### Language:\n ${langIcon}\n\n### Frameworks:\n ${frameworkIcons}\n\n## 説明\n${data.description}`
+                    }
+                ];
+            }
         }
-    })
-}
+    });
+};
 ```
 ### 参考情報
 https://plopjs.com/documentation/
+https://www.phind.com/search?cache=l10gia8f5m7arr2rex2t6wkw
