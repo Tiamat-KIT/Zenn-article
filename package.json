@@ -21,6 +21,6 @@
   "homepage": "https://github.com/Tiamat-KIT/Zenn-article#readme",
   "dependencies": {
     "plop": "^4.0.1",
-    "zenn-cli": "^0.1.141"
+    "zenn-cli": "^0.1.154"
   }
 }
